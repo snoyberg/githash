@@ -1,11 +1,14 @@
-[![Build Status](https://travis-ci.org/acfoltzer/gitrev.svg?branch=master)](https://travis-ci.org/acfoltzer/gitrev)
+# githash
+
+[![Build Status](https://travis-ci.org/snoyberg/githash.svg?branch=master)](https://travis-ci.org/snoyberg/githash)
+[![Build status](https://ci.appveyor.com/api/projects/status/g5asio63nfjjhx50/branch/master?svg=true)](https://ci.appveyor.com/project/snoyberg/githash/branch/master)
 
 Some handy Template Haskell splices for including the current git hash
 and branch in the code of your project. Useful for including in panic
 messages, `--version` output, or diagnostic info for more informative
 bug reports.
 
-Most of the complication in the `GitRev` module is due to the various
+Most of the complication in the `GitHash` module is due to the various
 places the current git hash might be stored:
 
 1. Detached HEAD: the hash is in `.git/HEAD`

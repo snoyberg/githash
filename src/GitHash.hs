@@ -1,8 +1,8 @@
 -- |
 -- Module      :  $Header$
--- Copyright   :  (c) 2015 Adam C. Foltzer
+-- Copyright   :  (c) 2018 Michael Snoyman, 2015 Adam C. Foltzer
 -- License     :  BSD3
--- Maintainer  :  acfoltzer@galois.com
+-- Maintainer  :  michael@snoyman.com
 -- Stability   :  provisional
 -- Portability :  portable
 --
@@ -12,7 +12,7 @@
 -- informative bug reports.
 --
 -- > {-# LANGUAGE TemplateHaskell #-}
--- > import Development.GitRev
+-- > import GitHash
 -- >
 -- > panic :: String -> a
 -- > panic msg = error panicMsg
@@ -26,10 +26,10 @@
 -- >
 -- > main = panic "oh no!"
 --
--- > % cabal exec runhaskell Example.hs
+-- > % stack runghc Example.hs
 -- > Example.hs: [panic master@2ae047ba5e4a6f0f3e705a43615363ac006099c1 (Mon Jan 11 11:50:59 2016 -0800) (14 commits in HEAD) (uncommitted files present)] oh no!
 
-module Development.GitRev (gitHash, gitBranch, gitDirty, gitCommitCount, gitCommitDate) where
+module GitHash (gitHash, gitBranch, gitDirty, gitCommitCount, gitCommitDate) where
 
 import Control.Applicative
 import Control.Exception

@@ -1,14 +1,12 @@
-name:        gitrev
+name:        githash
 version:     1.2.0
 synopsis:    Compile git revision info into Haskell projects
-description: Some handy Template Haskell splices for including the current git hash
-  and branch in the code of your project. Useful for including in panic messages,
-  @--version@ output, or diagnostic info for more informative bug reports.
+description: Please see the README and documentation at <https://www.stackage.org/package/githash>
 category:    Development
-author:      Adam C. Foltzer
-maintainer:  acfoltzer@galois.com
+author:      Michael Snoyman, Adam C. Foltzer
+maintainer:  michael@snoyman.com
 license:     BSD3
-github:      acfoltzer/gitrev.git
+github:      snoyberg/githash
 
 dependencies:
 - base >= 4.9.1 && < 5
@@ -19,5 +17,3 @@ dependencies:
 
 library:
   source-dirs: src
-  exposed-modules:
-  - Development.GitRev
