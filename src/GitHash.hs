@@ -157,7 +157,7 @@ getGitInfo root = try $ do
       _giHash <- run ["rev-parse", "HEAD"]
       _giBranch <- run ["rev-parse", "--abbrev-ref", "HEAD"]
 
-      dirtyString <- run ["rev-parse", "--abbrev-ref", "HEAD"]
+      dirtyString <- run ["status", "--porcelain"]
       let _giDirty = not $ null (dirtyString :: String)
 
       commitCount <- run ["rev-list", "HEAD", "--count"]
