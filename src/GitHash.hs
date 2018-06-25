@@ -1,4 +1,4 @@
-{-# LANGUAGE DeriveDataTypeable #-}
+{-# LANGUAGE DeriveLift #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
 -- |
@@ -56,7 +56,6 @@ import Control.Exception
 import Control.Monad
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as B8
-import Data.Data (Data)
 import Data.Maybe
 import Data.Typeable (Typeable)
 import Language.Haskell.TH
@@ -79,8 +78,7 @@ data GitInfo = GitInfo
   , _giCommitCount :: !Int
   , _giFiles :: ![FilePath]
   }
-  deriving (Data, Show)
-instance Lift GitInfo where
+  deriving (Lift, Show)
 
 -- | The hash of the most recent commit.
 --
