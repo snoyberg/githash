@@ -108,9 +108,9 @@ giCommitCount = _giCommitCount
 getGitInfo :: FilePath -> IO (Either GitHashException GitInfo)
 getGitInfo root = try $ do
   -- a lot of bookkeeping to record the right dependencies
-  let hd         = root </> "HEAD"
-      index      = root </> "index"
-      packedRefs = root </> "packed-refs"
+  let hd         = root </> ".git" </> "HEAD"
+      index      = root </> ".git" </> "index"
+      packedRefs = root </> ".git" </> "packed-refs"
   ehdRef <- try $ B.readFile hd
   files1 <-
     case ehdRef of
@@ -123,7 +123,7 @@ getGitInfo root = try $ do
         case B.splitAt 5 hdRef of
           -- pointer to ref
           ("ref: ", relRef) -> do
-            let ref = root </> B8.unpack relRef
+            let ref = root </> ".git" </> B8.unpack relRef
             refExists <- doesFileExist ref
             return $ if refExists then [ref] else []
           -- detached head
