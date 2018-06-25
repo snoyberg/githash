@@ -1,0 +1,23 @@
+name:        gitrev
+version:     1.2.0
+synopsis:    Compile git revision info into Haskell projects
+description: Some handy Template Haskell splices for including the current git hash
+  and branch in the code of your project. Useful for including in panic messages,
+  @--version@ output, or diagnostic info for more informative bug reports.
+category:    Development
+author:      Adam C. Foltzer
+maintainer:  acfoltzer@galois.com
+license:     BSD3
+github:      acfoltzer/gitrev.git
+
+dependencies:
+- base >=4.6 && <5
+- directory
+- filepath
+- template-haskell
+- process
+
+library:
+  source-dirs: src
+  exposed-modules:
+  - Development.GitRev
