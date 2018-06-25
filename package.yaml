@@ -11,7 +11,7 @@ license:     BSD3
 github:      acfoltzer/gitrev.git
 
 dependencies:
-- base >=4.6 && <5
+- base >= 4.9.1 && < 5
 - directory
 - filepath
 - template-haskell
