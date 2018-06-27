@@ -31,3 +31,4 @@ tests:
     - githash
     - hspec
     - temporary
+    - unliftio
