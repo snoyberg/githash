@@ -1,4 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module RepoWithASubmoduleSpec
     ( spec
@@ -6,11 +7,13 @@ module RepoWithASubmoduleSpec
 
 import Control.Exception
 import Control.Monad
+import qualified Data.ByteString as SB
 import GitHash
 import System.Directory
 import System.FilePath
 import System.Process
 import Test.Hspec
+import UnliftIO.Temporary
 
 spec :: Spec
 spec =
@@ -33,21 +36,23 @@ spec =
             sensible fp2
 
 setupGitRepo :: ((FilePath, FilePath) -> IO ()) -> IO ()
-setupGitRepo runTest = do
-    let fp = "/tmp/repo-with-submodule"
-        fp1 = fp </> "1"
-        fp2 = fp </> "2"
-    createDirectoryIfMissing True fp1
-    createDirectoryIfMissing True fp2
-    let runGitIn d cmd =
-            void $ readCreateProcess ((shell $ "git " ++ cmd) {cwd = Just d}) ""
-        runGit1 = runGitIn fp1
-        runGit2 = runGitIn fp2
-    runGit1 "init"
-    runGit2 "init"
-    writeFile (fp2 </> "README.md") "This is a readme, you should read it."
-    runGit2 "add README.md"
-    runGit2 "commit -m 'Initial commit'"
-    runGit1 $ unwords ["submodule add", fp2, "2"]
-    runGit1 "commit -m 'Initial commit'"
-    runTest (fp1, fp2) `finally` removeDirectoryRecursive fp
+setupGitRepo runTest =
+    withSystemTempDirectory "with-submodule" $ \fp -> do
+        let fp1 = fp </> "1"
+            fp2 = fp </> "2"
+        createDirectoryIfMissing True fp1
+        createDirectoryIfMissing True fp2
+        let runGitIn d args =
+                void $ readCreateProcess ((proc "git" args) {cwd = Just d}) ""
+            runGit1 = runGitIn fp1
+            runGit2 = runGitIn fp2
+        runGit1 ["init"]
+        runGit2 ["init"]
+        SB.writeFile
+            (fp2 </> "README.md")
+            "This is a readme, you should read it."
+        runGit2 ["add", "README.md"]
+        runGit2 ["commit", "-m", "Initial commit"]
+        runGit1 ["submodule", "add", fp2, "2"]
+        runGit1 ["commit", "-m", "Initial commit"]
+        runTest (fp1, fp2)
