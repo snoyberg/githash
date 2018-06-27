@@ -8,6 +8,11 @@ import Test.Hspec
 
 spec :: Spec
 spec = do
-  it "sanity" $ do
-    let gi = $$tGitInfoCwd
-    giCommitCount gi `shouldSatisfy` (>= 1)
+  describe "tGitInfoCwd" $ do
+    it "makes vaguely sane git info for this repository" $ do
+        let gi = $$tGitInfoCwd
+        length (giHash gi)`shouldNotBe` 128
+        giBranch gi `shouldNotBe` []
+        seq (giDirty gi) () `shouldBe` ()
+        giCommitDate gi `shouldNotBe` []
+        giCommitCount gi `shouldSatisfy` (>= 1)
