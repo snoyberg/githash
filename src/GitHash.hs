@@ -32,6 +32,8 @@
 -- > % stack runghc Example.hs
 -- > Example.hs: [panic master@2ae047ba5e4a6f0f3e705a43615363ac006099c1 (Mon Jan 11 11:50:59 2016 -0800) (14 commits in HEAD) (uncommitted files present)] oh no!
 --
+-- WARNING: None of this will work in a git repository without any commits.
+--
 -- @since 0.1.0.0
 module GitHash
   ( -- * Types
@@ -181,7 +183,7 @@ data GitHashException
   = GHECouldn'tReadFile !FilePath !IOException
   | GHEInvalidCommitCount !FilePath !String
   | GHEGitRunFailed !FilePath ![String] !ExitCode !String !String
-  deriving (Show, Typeable)
+  deriving (Show, Eq, Typeable)
 instance Exception GitHashException
 
 -- | Load up the 'GitInfo' value at compile time for the given
