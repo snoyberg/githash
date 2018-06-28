@@ -26,7 +26,6 @@ spec =
                         case errOrGi of
                             Left err -> expectationFailure $ show err
                             Right gi -> do
-                                getGitRoot fp `shouldReturn` Right fp
                                 length (giHash gi) `shouldNotBe` 128
                                 giBranch gi `shouldBe` "master"
                                 giDirty gi `shouldBe` False
