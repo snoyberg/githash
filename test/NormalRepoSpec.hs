@@ -38,6 +38,8 @@ setupGitRepo runTest =
         let runGit args =
                 void $ readCreateProcess ((proc "git" args) {cwd = Just fp}) ""
         runGit ["init"]
+        runGit ["config", "user.name", "Test User"]
+        runGit ["config", "user.emil", "test@example.com"]
         SB.writeFile
             (fp </> "README.md")
             "This is a readme, you should read it."
