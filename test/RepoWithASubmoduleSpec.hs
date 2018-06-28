@@ -47,16 +47,28 @@ setupGitRepo runTest =
             runGit1 = runGitIn fp1
             runGit2 = runGitIn fp2
         runGit1 ["init"]
-        runGit1 ["config", "user.name", "Test User"]
-        runGit1 ["config", "user.emil", "test@example.com"]
         runGit2 ["init"]
-        runGit2 ["config", "user.name", "Test User"]
-        runGit2 ["config", "user.emil", "test@example.com"]
         SB.writeFile
             (fp2 </> "README.md")
             "This is a readme, you should read it."
         runGit2 ["add", "README.md"]
-        runGit2 ["commit", "-m", "Initial commit"]
+        runGit2
+            [ "-c"
+            , "user.name='Test User'"
+            , "-c"
+            , "user.email='test@example.com'"
+            , "commit"
+            , "-m"
+            , "Initial commit"
+            ]
         runGit1 ["submodule", "add", fp2, "2"]
-        runGit1 ["commit", "-m", "Initial commit"]
+        runGit1
+            [ "-c"
+            , "user.name='Test User'"
+            , "-c"
+            , "user.email='test@example.com'"
+            , "commit"
+            , "-m"
+            , "Initial commit"
+            ]
         runTest (fp1, fp2)
