@@ -17,23 +17,28 @@ import UnliftIO.Temporary
 
 spec :: Spec
 spec =
-    around setupGitRepo $
-    describe "getGitInfo" $ do
-        it
-            "it makes sensible git info for a both the parent and the child module" $ \(fp1, fp2) -> do
-            let sensible fp = do
-                    errOrGi <- getGitInfo fp
-                    case errOrGi of
-                        Left err -> expectationFailure $ show err
-                        Right gi -> do
-                            getGitRoot fp `shouldReturn` Right fp
-                            length (giHash gi) `shouldNotBe` 128
-                            giBranch gi `shouldBe` "master"
-                            giDirty gi `shouldBe` False
-                            giCommitDate gi `shouldNotBe` []
-                            giCommitCount gi `shouldBe` 1
-            sensible fp1
-            sensible fp2
+    around setupGitRepo $ do
+        describe "getGitInfo" $ do
+            it
+                "it makes sensible git info for a both the parent and the child module" $ \(fp1, fp2) -> do
+                let sensible fp = do
+                        errOrGi <- getGitInfo fp
+                        case errOrGi of
+                            Left err -> expectationFailure $ show err
+                            Right gi -> do
+                                getGitRoot fp `shouldReturn` Right fp
+                                length (giHash gi) `shouldNotBe` 128
+                                giBranch gi `shouldBe` "master"
+                                giDirty gi `shouldBe` False
+                                giCommitDate gi `shouldNotBe` []
+                                giCommitCount gi `shouldBe` 1
+                sensible fp1
+                sensible fp2
+        describe "getGitRoot" $ do
+            it
+                "it gets the expected git root for a both the parent and the child module" $ \(fp1, fp2) -> do
+                getGitRoot fp1 `shouldReturn` Right fp1
+                getGitRoot fp2 `shouldReturn` Right fp2
 
 setupGitRepo :: ((FilePath, FilePath) -> IO ()) -> IO ()
 setupGitRepo runTest =

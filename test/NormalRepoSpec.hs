@@ -17,19 +17,22 @@ import UnliftIO.Temporary
 
 spec :: Spec
 spec =
-    around setupGitRepo $
-    describe "getGitInfo" $ do
-        it "it makes sensible git info for a regular git repository" $ \fp -> do
-            errOrGi <- getGitInfo fp
-            case errOrGi of
-                Left err -> expectationFailure $ show err
-                Right gi -> do
-                    getGitRoot fp `shouldReturn` Right fp
-                    length (giHash gi) `shouldNotBe` 128
-                    giBranch gi `shouldBe` "master"
-                    giDirty gi `shouldBe` False
-                    giCommitDate gi `shouldNotBe` []
-                    giCommitCount gi `shouldBe` 1
+    around setupGitRepo $ do
+        describe "getGitInfo" $ do
+            it "it makes sensible git info for a regular git repository" $ \fp -> do
+                errOrGi <- getGitInfo fp
+                case errOrGi of
+                    Left err -> expectationFailure $ show err
+                    Right gi -> do
+                        getGitRoot fp `shouldReturn` Right fp
+                        length (giHash gi) `shouldNotBe` 128
+                        giBranch gi `shouldBe` "master"
+                        giDirty gi `shouldBe` False
+                        giCommitDate gi `shouldNotBe` []
+                        giCommitCount gi `shouldBe` 1
+        describe "getGitRoot" $ do
+            it "it gets the expected git root for a regular git repository" $ \fp ->
+                getGitRoot fp `shouldReturn` Right fp
 
 setupGitRepo :: (FilePath -> IO ()) -> IO ()
 setupGitRepo runTest =
