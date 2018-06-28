@@ -167,7 +167,7 @@ getGitInfo root = try $ do
 --
 -- @since 0.1.0.0
 getGitRoot :: FilePath -> IO (Either GitHashException FilePath)
-getGitRoot dir = fmap (takeWhile (/= '\n')) `fmap` (runGit dir ["rev-parse", "--show-toplevel"])
+getGitRoot dir = fmap (normalise . takeWhile (/= '\n')) `fmap` (runGit dir ["rev-parse", "--show-toplevel"])
 
 runGit root args = do
   let cp = (proc "git" args) { cwd = Just root }
