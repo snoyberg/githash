@@ -31,7 +31,7 @@ spec =
                         giCommitCount gi `shouldBe` 1
         describe "getGitRoot" $ do
             it "it gets the expected git root for a regular git repository" $ \fp ->
-                (fmap normalise <$> getGitRoot fp) `shouldReturn` Right fp
+                getGitRoot fp `shouldReturn` Right fp
 
 setupGitRepo :: (FilePath -> IO ()) -> IO ()
 setupGitRepo runTest =

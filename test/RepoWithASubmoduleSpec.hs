@@ -36,8 +36,8 @@ spec =
         describe "getGitRoot" $ do
             it
                 "it gets the expected git root for a both the parent and the child module" $ \(fp1, fp2) -> do
-                (fmap normalise <$> getGitRoot fp1) `shouldReturn` Right fp1
-                (fmap normalise <$> getGitRoot fp2) `shouldReturn` Right fp2
+                getGitRoot fp1 `shouldReturn` Right fp1
+                getGitRoot fp2 `shouldReturn` Right fp2
 
 setupGitRepo :: ((FilePath, FilePath) -> IO ()) -> IO ()
 setupGitRepo runTest =
