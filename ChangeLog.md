@@ -1,6 +1,6 @@
 # ChangeLog for githash
 
-## 0.1.0.2
+## 0.1.1.0
 
 * Add message of the most recent commit
 

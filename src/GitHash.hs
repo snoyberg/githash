@@ -107,7 +107,7 @@ giCommitCount = _giCommitCount
 
 -- | The message of the most recent commit.
 --
--- @since 0.1.0.2
+-- @since 0.1.1.0
 giCommitMessage :: GitInfo -> String
 giCommitMessage = _giCommitMessage
 
