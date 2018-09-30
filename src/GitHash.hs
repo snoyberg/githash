@@ -45,6 +45,7 @@ module GitHash
   , giDirty
   , giCommitDate
   , giCommitCount
+  , giCommitMessage
     -- * Creators
   , getGitInfo
   , getGitRoot
@@ -79,6 +80,7 @@ data GitInfo = GitInfo
   , _giCommitDate :: !String
   , _giCommitCount :: !Int
   , _giFiles :: ![FilePath]
+  , _giCommitMessage :: !String
   }
   deriving (Lift, Show)
 
@@ -102,6 +104,12 @@ giCommitDate = _giCommitDate
 
 giCommitCount :: GitInfo -> Int
 giCommitCount = _giCommitCount
+
+-- | The message of the most recent commit.
+--
+-- @since 0.1.1.0
+giCommitMessage :: GitInfo -> String
+giCommitMessage = _giCommitMessage
 
 -- | Get the 'GitInfo' for the given root directory. Root directory
 -- should be the directory containing the @.git@ directory.
@@ -159,6 +167,8 @@ getGitInfo root = try $ do
       Just x -> return x
 
   _giCommitDate <- run ["log", "HEAD", "-1", "--format=%cd"]
+
+  _giCommitMessage <- run ["log", "-1", "--pretty=%B"]
 
   return GitInfo {..}
 
