@@ -52,6 +52,8 @@ module GitHash
     -- * Template Haskell
   , tGitInfo
   , tGitInfoCwd
+  , tGitInfoTry
+  , tGitInfoCwdTry
   ) where
 
 import Control.Applicative
@@ -197,7 +199,7 @@ data GitHashException
 instance Exception GitHashException
 
 -- | Load up the 'GitInfo' value at compile time for the given
--- directory.
+-- directory. Compilation fails if no info is available.
 --
 -- @since 0.1.0.0
 tGitInfo :: FilePath -> Q (TExp GitInfo)
@@ -210,9 +212,36 @@ tGitInfo fp = unsafeTExpCoerce $ do
   mapM_ addDependentFile (_giFiles gi)
   lift (gi :: GitInfo) -- adding type sig to make the unsafe look slightly better
 
+-- | Try to load up the 'GitInfo' value at compile time for the given
+-- directory.
+--
+-- @since 0.1.2.0
+tGitInfoTry :: FilePath -> Q (TExp (Either String GitInfo))
+tGitInfoTry fp = unsafeTExpCoerce $ do
+  egi <- runIO $ do
+    eroot <- getGitRoot fp
+    case eroot of
+      Left e -> return $ Left $ show e
+      Right root -> do
+        einfo <- getGitInfo root
+        case einfo of
+          Left e -> return $ Left $ show e
+          Right info -> return $ Right info
+  case egi of
+    Left _ -> return ()
+    Right gi -> mapM_ addDependentFile (_giFiles gi)
+  lift (egi :: Either String GitInfo) -- adding type sig to make the unsafe look slightly better
+
 -- | Load up the 'GitInfo' value at compile time for the current
 -- working directory.
 --
 -- @since 0.1.0.0
 tGitInfoCwd :: Q (TExp GitInfo)
 tGitInfoCwd = tGitInfo "."
+
+-- | Try to load up the 'GitInfo' value at compile time for the current
+-- working directory.
+--
+-- @since 0.1.2.0
+tGitInfoCwdTry :: Q (TExp (Either String GitInfo))
+tGitInfoCwdTry = tGitInfoTry "."
