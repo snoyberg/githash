@@ -183,10 +183,11 @@ getGitRoot dir = fmap (normalise . takeWhile (/= '\n')) `fmap` (runGit dir ["rev
 
 runGit root args = do
   let cp = (proc "git" args) { cwd = Just root }
-  (ec, out, err) <- readCreateProcessWithExitCode cp ""
-  case ec of
-    ExitSuccess -> return $ Right out
-    ExitFailure _ -> return $ Left $ GHEGitRunFailed root args ec out err
+  eres <- try $ readCreateProcessWithExitCode cp ""
+  return $ case eres of
+    Left e -> Left $ GHEGitRunException root args e
+    Right (ExitSuccess, out, _) -> Right out
+    Right (ec@ExitFailure{}, out, err) -> Left $ GHEGitRunFailed root args ec out err
 
 -- | Exceptions which can occur when using this library's functions.
 --
@@ -195,6 +196,7 @@ data GitHashException
   = GHECouldn'tReadFile !FilePath !IOException
   | GHEInvalidCommitCount !FilePath !String
   | GHEGitRunFailed !FilePath ![String] !ExitCode !String !String
+  | GHEGitRunException !FilePath ![String] !IOException
   deriving (Show, Eq, Typeable)
 instance Exception GitHashException
 
