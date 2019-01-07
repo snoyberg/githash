@@ -1,5 +1,9 @@
 # ChangeLog for githash
 
+## 0.1.3.1
+
+* Clean up some warnings (addresses [fpco/optparse-simple#11](https://github.com/fpco/optparse-simple/issues/11))
+
 ## 0.1.3.0
 
 * Catch exceptions thrown by `readCreateProcessWithExitCode` to deal

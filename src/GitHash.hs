@@ -57,12 +57,9 @@ module GitHash
   , tGitInfoCwdTry
   ) where
 
-import Control.Applicative
 import Control.Exception
-import Control.Monad
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as B8
-import Data.Maybe
 import Data.Typeable (Typeable)
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
@@ -182,6 +179,7 @@ getGitInfo root = try $ do
 getGitRoot :: FilePath -> IO (Either GitHashException FilePath)
 getGitRoot dir = fmap (normalise . takeWhile (/= '\n')) `fmap` (runGit dir ["rev-parse", "--show-toplevel"])
 
+runGit :: FilePath -> [String] -> IO (Either GitHashException String)
 runGit root args = do
   let cp = (proc "git" args) { cwd = Just root }
   eres <- try $ readCreateProcessWithExitCode cp ""
