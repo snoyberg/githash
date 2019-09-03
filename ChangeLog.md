@@ -1,5 +1,9 @@
 # ChangeLog for githash
 
+## 0.1.3.2
+
+* Test suite works outside of a Git repo [#12](https://github.com/snoyberg/githash/issues/12)
+
 ## 0.1.3.1
 
 * Clean up some warnings (addresses [fpco/optparse-simple#11](https://github.com/fpco/optparse-simple/issues/11))

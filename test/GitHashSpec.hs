@@ -4,15 +4,21 @@ module GitHashSpec
   ) where
 
 import GitHash
+import System.Directory (doesDirectoryExist)
 import Test.Hspec
 
 spec :: Spec
 spec = do
   describe "tGitInfoCwd" $ do
     it "makes vaguely sane git info for this repository" $ do
-        let gi = $$tGitInfoCwd
-        length (giHash gi)`shouldNotBe` 128
-        giBranch gi `shouldNotBe` []
-        seq (giDirty gi) () `shouldBe` ()
-        giCommitDate gi `shouldNotBe` []
-        giCommitCount gi `shouldSatisfy` (>= 1)
+        let egi = $$tGitInfoCwdTry
+        gitDirExists <- doesDirectoryExist ".git"
+        case egi of
+          Left _ -> gitDirExists `shouldBe` False
+          Right gi -> do
+            gitDirExists `shouldBe` True
+            length (giHash gi)`shouldNotBe` 128
+            giBranch gi `shouldNotBe` []
+            seq (giDirty gi) () `shouldBe` ()
+            giCommitDate gi `shouldNotBe` []
+            giCommitCount gi `shouldSatisfy` (>= 1)
