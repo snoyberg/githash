@@ -196,6 +196,9 @@ install:
 
       # Build the dependencies
       stack --no-terminal --install-ghc $ARGS test --bench --only-dependencies
+
+      # Test without a Git repo
+      ./etc/scripts/test-no-repo.sh
       ;;
     cabal)
       cabal --version
