@@ -5,7 +5,6 @@ module NormalRepoSpec
     ( spec
     ) where
 
-import Control.Exception
 import Control.Monad
 import qualified Data.ByteString as SB
 import GitHash
