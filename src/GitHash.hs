@@ -111,16 +111,13 @@ giCommitCount = _giCommitCount
 giCommitMessage :: GitInfo -> String
 giCommitMessage = _giCommitMessage
 
--- | Get the 'GitInfo' for the given root directory. Root directory
--- should be the directory containing the @.git@ directory.
---
--- @since 0.1.0.0
-getGitInfo :: FilePath -> IO (Either GitHashException GitInfo)
-getGitInfo root = try $ do
+-- | Get a list of files from within a @.git@ directory.
+getGitFiles :: FilePath -> IO [FilePath]
+getGitFiles git = do
   -- a lot of bookkeeping to record the right dependencies
-  let hd         = root </> ".git" </> "HEAD"
-      index      = root </> ".git" </> "index"
-      packedRefs = root </> ".git" </> "packed-refs"
+  let hd         = git </> "HEAD"
+      index      = git </> "index"
+      packedRefs = git </> "packed-refs"
   ehdRef <- try $ B.readFile hd
   files1 <-
     case ehdRef of
@@ -133,7 +130,7 @@ getGitInfo root = try $ do
         case B.splitAt 5 hdRef of
           -- pointer to ref
           ("ref: ", relRef) -> do
-            let ref = root </> ".git" </> B8.unpack relRef
+            let ref = git </> B8.unpack relRef
             refExists <- doesFileExist ref
             return $ if refExists then [ref] else []
           -- detached head
@@ -147,13 +144,21 @@ getGitInfo root = try $ do
   packedExists <- doesFileExist packedRefs
   let files3 = if packedExists then [packedRefs] else []
 
-      _giFiles = concat [files1, files2, files3]
-      run args = do
+  return $ concat [files1, files2, files3]
+
+-- | Get the 'GitInfo' for the given root directory. Root directory
+-- should be the directory containing the @.git@ directory.
+--
+-- @since 0.1.0.0
+getGitInfo :: FilePath -> IO (Either GitHashException GitInfo)
+getGitInfo root = try $ do
+  let run args = do
         eres <- runGit root args
         case eres of
           Left e -> throwIO e
           Right str -> return $ takeWhile (/= '\n') str
 
+  _giFiles <- getGitFiles (root </> ".git")
   _giHash <- run ["rev-parse", "HEAD"]
   _giBranch <- run ["rev-parse", "--abbrev-ref", "HEAD"]
 
