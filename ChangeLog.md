@@ -1,5 +1,9 @@
 # ChangeLog for githash
 
+## 0.1.3.3
+
+* Add git-worktree support [#13](https://github.com/snoyberg/githash/issues/13)
+
 ## 0.1.3.2
 
 * Test suite works outside of a Git repo [#12](https://github.com/snoyberg/githash/issues/12)
