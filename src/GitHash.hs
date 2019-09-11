@@ -112,8 +112,8 @@ giCommitMessage :: GitInfo -> String
 giCommitMessage = _giCommitMessage
 
 -- | Get a list of files from within a @.git@ directory.
-getGitFiles :: FilePath -> IO [FilePath]
-getGitFiles git = do
+getGitFilesRegular :: FilePath -> IO [FilePath]
+getGitFilesRegular git = do
   -- a lot of bookkeeping to record the right dependencies
   let hd         = git </> "HEAD"
       index      = git </> "index"
@@ -145,6 +145,33 @@ getGitFiles git = do
   let files3 = if packedExists then [packedRefs] else []
 
   return $ concat [files1, files2, files3]
+
+-- | Get a list of dependent files from a @.git@ file representing a
+-- git-worktree.
+getGitFilesForWorktree :: FilePath -> IO [FilePath]
+getGitFilesForWorktree git = do
+  gitPath <- try $ B.readFile git
+  case gitPath of
+    Left e
+      | otherwise -> throwIO $ GHECouldn'tReadFile git e
+    Right rootPath ->
+      -- the .git file contains the absolute path to the git
+      -- directory's root.
+      case B.splitAt 8 rootPath of
+        -- path to root
+        ("gitdir: ", gitdir) -> do
+          let path = takeWhile (/= '\n') (B8.unpack gitdir)
+          -- The .git file points to a .git directory which we can just
+          -- treat like a non git-worktree one.
+          getGitFilesRegular path
+        _ -> throwIO $ GHEInvalidGitFile (B8.unpack rootPath)
+
+
+-- | Get a list of dependent git related files.
+getGitFiles :: FilePath -> IO [FilePath]
+getGitFiles git = do
+  isDir <- doesDirectoryExist git
+  if isDir then getGitFilesRegular git else getGitFilesForWorktree git
 
 -- | Get the 'GitInfo' for the given root directory. Root directory
 -- should be the directory containing the @.git@ directory.
@@ -199,6 +226,7 @@ runGit root args = do
 data GitHashException
   = GHECouldn'tReadFile !FilePath !IOException
   | GHEInvalidCommitCount !FilePath !String
+  | GHEInvalidGitFile !String
   | GHEGitRunFailed !FilePath ![String] !ExitCode !String !String
   | GHEGitRunException !FilePath ![String] !IOException
   deriving (Show, Eq, Typeable)
