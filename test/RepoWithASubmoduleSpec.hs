@@ -31,6 +31,7 @@ spec =
                                 giCommitDate gi `shouldNotBe` []
                                 giCommitCount gi `shouldBe` 1
                                 giCommitMessage gi `shouldBe` "Initial commit"
+                                length (giDescribe gi) `shouldBe` 7
                 sensible fp1
                 sensible fp2
         describe "getGitRoot" $ do

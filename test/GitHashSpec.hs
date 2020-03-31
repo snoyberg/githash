@@ -22,3 +22,4 @@ spec = do
             seq (giDirty gi) () `shouldBe` ()
             giCommitDate gi `shouldNotBe` []
             giCommitCount gi `shouldSatisfy` (>= 1)
+            giDescribe gi `shouldStartWith` "githash-"
