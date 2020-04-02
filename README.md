@@ -1,7 +1,6 @@
 # githash
 
-[![Build Status](https://travis-ci.org/snoyberg/githash.svg?branch=master)](https://travis-ci.org/snoyberg/githash)
-[![Build status](https://ci.appveyor.com/api/projects/status/g5asio63nfjjhx50/branch/master?svg=true)](https://ci.appveyor.com/project/snoyberg/githash/branch/master)
+[![Build Status](https://dev.azure.com/snoyberg/githash/_apis/build/status/snoyberg.githash?branchName=master)](https://dev.azure.com/snoyberg/githash/_build/latest?definitionId=11&branchName=master)
 
 Some handy Template Haskell splices for including the current git hash
 and branch in the code of your project. Useful for including in panic
