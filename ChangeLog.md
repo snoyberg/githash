@@ -1,5 +1,9 @@
 # ChangeLog for githash
 
+## 0.1.4.0
+
+* Add git-describe output
+
 ## 0.1.3.3
 
 * Add git-worktree support [#13](https://github.com/snoyberg/githash/issues/13)

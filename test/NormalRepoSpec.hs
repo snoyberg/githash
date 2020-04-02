@@ -29,6 +29,7 @@ spec =
                         giCommitDate gi `shouldNotBe` []
                         giCommitCount gi `shouldBe` 1
                         giCommitMessage gi `shouldBe` "Initial commit"
+                        length (giDescribe gi) `shouldBe` 7
         describe "getGitRoot" $ do
             it "it gets the expected git root for a regular git repository" $ \fp ->
                 getGitRoot fp `shouldReturn` Right fp
