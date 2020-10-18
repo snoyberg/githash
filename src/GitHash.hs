@@ -48,6 +48,7 @@ module GitHash
   , giCommitCount
   , giCommitMessage
   , giDescribe
+  , giTag
     -- * Creators
   , getGitInfo
   , getGitRoot
@@ -83,6 +84,7 @@ data GitInfo = GitInfo
   , _giFiles :: ![FilePath]
   , _giCommitMessage :: !String
   , _giDescribe :: !String
+  , _giTag :: !String
   }
   deriving (Lift, Show)
 
@@ -118,6 +120,11 @@ giCommitMessage = _giCommitMessage
 -- @since 0.1.4.0
 giDescribe :: GitInfo -> String
 giDescribe = _giDescribe
+
+-- | The output of @git describe --always --tags@ for the most recent commit.
+--
+giTag :: GitInfo -> String
+giTag = _giTag
 
 -- | Get a list of files from within a @.git@ directory.
 getGitFilesRegular :: FilePath -> IO [FilePath]
@@ -211,6 +218,8 @@ getGitInfo root = try $ do
   _giCommitMessage <- run ["log", "-1", "--pretty=%B"]
 
   _giDescribe <- run ["describe", "--always"]
+
+  _giTag <- run ["describe", "--always", "--tags"]
 
   return GitInfo {..}
 
