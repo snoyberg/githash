@@ -123,6 +123,7 @@ giDescribe = _giDescribe
 
 -- | The output of @git describe --always --tags@ for the most recent commit.
 --
+-- @since 0.1.5.0
 giTag :: GitInfo -> String
 giTag = _giTag
 
