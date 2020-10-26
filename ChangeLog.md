@@ -1,5 +1,9 @@
 # ChangeLog for githash
 
+## 0.1.5.0
+
+* Add git tag output via git-describe
+
 ## 0.1.4.0
 
 * Add git-describe output
