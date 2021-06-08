@@ -1,5 +1,11 @@
 # ChangeLog for githash
 
+## 0.1.6.0
+
+* Always include patchlevel and hash in git-describe output
+
+* Don't let user's configured initial branch name break tests
+
 ## 0.1.5.0
 
 * Add git tag output via git-describe
