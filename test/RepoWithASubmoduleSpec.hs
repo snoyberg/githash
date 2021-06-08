@@ -26,7 +26,7 @@ spec =
                             Left err -> expectationFailure $ show err
                             Right gi -> do
                                 length (giHash gi) `shouldNotBe` 128
-                                giBranch gi `shouldBe` "master"
+                                giBranch gi `shouldBe` initialBranchName
                                 giDirty gi `shouldBe` False
                                 giCommitDate gi `shouldNotBe` []
                                 giCommitCount gi `shouldBe` 1
@@ -51,8 +51,8 @@ setupGitRepo runTest =
                 void $ readCreateProcess ((proc "git" args) {cwd = Just d}) ""
             runGit1 = runGitIn fp1
             runGit2 = runGitIn fp2
-        runGit1 ["init"]
-        runGit2 ["init"]
+        runGit1 ["init", "--initial-branch", initialBranchName]
+        runGit2 ["init", "--initial-branch", initialBranchName]
         SB.writeFile
             (fp2 </> "README.md")
             "This is a readme, you should read it."
@@ -77,3 +77,6 @@ setupGitRepo runTest =
             , "Initial commit"
             ]
         runTest (fp1, fp2)
+
+initialBranchName :: String
+initialBranchName = "main"
