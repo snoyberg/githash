@@ -218,7 +218,7 @@ getGitInfo root = try $ do
 
   _giCommitMessage <- run ["log", "-1", "--pretty=%B"]
 
-  _giDescribe <- run ["describe", "--always"]
+  _giDescribe <- run ["describe", "--always", "--long"]
 
   _giTag <- run ["describe", "--always", "--tags"]
 

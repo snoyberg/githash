@@ -24,7 +24,7 @@ spec =
                     Left err -> expectationFailure $ show err
                     Right gi -> do
                         length (giHash gi) `shouldNotBe` 128
-                        giBranch gi `shouldBe` "master"
+                        giBranch gi `shouldBe` initialBranchName
                         giDirty gi `shouldBe` False
                         giCommitDate gi `shouldNotBe` []
                         giCommitCount gi `shouldBe` 1
@@ -40,7 +40,7 @@ setupGitRepo runTest =
         createDirectoryIfMissing True fp
         let runGit args =
                 void $ readCreateProcess ((proc "git" args) {cwd = Just fp}) ""
-        runGit ["init"]
+        runGit ["init", "--initial-branch", initialBranchName]
         SB.writeFile
             (fp </> "README.md")
             "This is a readme, you should read it."
@@ -55,3 +55,6 @@ setupGitRepo runTest =
             , "Initial commit"
             ]
         runTest fp
+
+initialBranchName :: String
+initialBranchName = "main"
