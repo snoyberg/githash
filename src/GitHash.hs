@@ -65,6 +65,7 @@ import qualified Data.ByteString.Char8 as B8
 import Data.Typeable (Typeable)
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
+import Language.Haskell.TH.Syntax.Compat
 import System.Directory
 import System.Exit
 import System.FilePath
@@ -256,8 +257,8 @@ instance Exception GitHashException
 -- directory. Compilation fails if no info is available.
 --
 -- @since 0.1.0.0
-tGitInfo :: FilePath -> Q (TExp GitInfo)
-tGitInfo fp = unsafeTExpCoerce $ do
+tGitInfo :: FilePath -> SpliceQ GitInfo
+tGitInfo fp = unsafeSpliceCoerce $ do
   gi <- runIO $
     getGitRoot fp >>=
     either throwIO return >>=
@@ -270,8 +271,8 @@ tGitInfo fp = unsafeTExpCoerce $ do
 -- directory.
 --
 -- @since 0.1.2.0
-tGitInfoTry :: FilePath -> Q (TExp (Either String GitInfo))
-tGitInfoTry fp = unsafeTExpCoerce $ do
+tGitInfoTry :: FilePath -> SpliceQ (Either String GitInfo)
+tGitInfoTry fp = unsafeSpliceCoerce $ do
   egi <- runIO $ do
     eroot <- getGitRoot fp
     case eroot of
@@ -290,12 +291,12 @@ tGitInfoTry fp = unsafeTExpCoerce $ do
 -- working directory.
 --
 -- @since 0.1.0.0
-tGitInfoCwd :: Q (TExp GitInfo)
+tGitInfoCwd :: SpliceQ GitInfo
 tGitInfoCwd = tGitInfo "."
 
 -- | Try to load up the 'GitInfo' value at compile time for the current
 -- working directory.
 --
 -- @since 0.1.2.0
-tGitInfoCwdTry :: Q (TExp (Either String GitInfo))
+tGitInfoCwdTry :: SpliceQ (Either String GitInfo)
 tGitInfoCwdTry = tGitInfoTry "."

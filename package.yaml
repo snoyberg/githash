@@ -18,6 +18,7 @@ dependencies:
 - directory
 - filepath
 - template-haskell
+- th-compat
 - process
 
 library:
