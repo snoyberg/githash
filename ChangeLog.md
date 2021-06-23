@@ -1,5 +1,9 @@
 # ChangeLog for githash
 
+## 0.1.6.1
+
+* [Support template-haskell 2.17](https://github.com/snoyberg/githash/pull/22)
+
 ## 0.1.6.0
 
 * Always include patchlevel and hash in git-describe output
