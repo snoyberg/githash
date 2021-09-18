@@ -131,6 +131,23 @@ giTag = _giTag
 
 -- | Get a list of files from within a @.git@ directory.
 getGitFilesRegular :: FilePath -> IO [FilePath]
+-- [Note: Current implementation's limitation]
+-- the current implementation doesn't work right if:
+-- 1. the current branch's name contains Non-ASCII character (due to @B8.unpack@),
+-- 2. the current branch is only in .git/packed-refs, or
+-- 3. the current branch is a symbolic ref to another reference.
+-- In these cases, the file with the name `ref` in the following
+-- code cannot be found in the filesystem (in the cases 1 & 2),
+-- or can be found but will not be updated on commit (in the case 3).
+-- As a result, if a module uses @tGitInfo@ as TH macro
+-- and the target git repo is in one of the conditions 1--3
+-- at the time of compilation, content-change-free commits will fail to
+-- trigger recompilation.
+--
+-- [Note: reftable]
+-- In the near future, the technology called reftable may replace the
+-- Git's reference management. This function's implementation does not
+-- work with reftable, and therefore will need to be updated.
 getGitFilesRegular git = do
   -- a lot of bookkeeping to record the right dependencies
   let hd         = git </> "HEAD"
