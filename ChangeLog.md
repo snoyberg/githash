@@ -1,5 +1,13 @@
 # ChangeLog for githash
 
+## 0.1.6.2
+
+* Fixed bugs; now this library's Template Haskell functions are much more
+  likely on recompilation to detect Git update that doesn't affect workspace:
+  e.g. `git switch -c <new_branch>` (equivalently
+  `git checkout -b <new_branch>`) and `git commit --amend --only`.
+  Implemented in [#23](https://github.com/snoyberg/githash/pull/23).
+
 ## 0.1.6.1
 
 * [Support template-haskell 2.17](https://github.com/snoyberg/githash/pull/22)
