@@ -63,6 +63,7 @@ import Control.Exception
 import qualified Data.ByteString as B
 import qualified Data.ByteString.Char8 as B8
 import Data.Typeable (Typeable)
+import Data.Word (Word8)
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
 import Language.Haskell.TH.Syntax.Compat
@@ -144,12 +145,12 @@ getGitFilesRegular git = do
       Right hdRef -> do
         -- the HEAD file either contains the hash of a detached head
         -- or a pointer to the file that contains the hash of the head
-        case B.splitAt 5 hdRef of
+        case B.splitAt 5 $ B.takeWhile (not . isSmallASCIIControl) hdRef of
           -- pointer to ref
           ("ref: ", relRef) -> do
             let ref = git </> B8.unpack relRef
             refExists <- doesFileExist ref
-            return $ if refExists then [ref] else []
+            return $ if refExists then [hd,ref] else [hd]
           -- detached head
           _hash -> return [hd]
   -- add the index if it exists to set the dirty flag
@@ -162,6 +163,15 @@ getGitFilesRegular git = do
   let files3 = if packedExists then [packedRefs] else []
 
   return $ concat [files1, files2, files3]
+  where
+    -- This is to quickly strip newline characters
+    -- from the content of .git/HEAD.
+    -- Git references don't include ASCII control char bytes:
+    -- 0x00 -- 0x1F and 0x7F.
+    -- .git/HEAD may contain some ASCII control bytes LF (0xA) and
+    -- CR (0xD) before EOF, which should be ignored.
+    isSmallASCIIControl :: Word8 -> Bool
+    isSmallASCIIControl = (<0x20)
 
 -- | Get a list of dependent files from a @.git@ file representing a
 -- git-worktree.
