@@ -66,7 +66,7 @@ setupGitRepo runTest =
             , "-m"
             , "Initial commit"
             ]
-        runGit1 ["submodule", "add", fp2, "2"]
+        runGit1 ["-c", "protocol.file.allow=always", "submodule", "add", fp2, "2"]
         runGit1
             [ "-c"
             , "user.name='Test User'"
