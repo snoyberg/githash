@@ -1,5 +1,9 @@
 # ChangeLog for githash
 
+## 0.1.6.3
+
+* Specify protocol.file.allow=always for latest git [#28](https://github.com/snoyberg/githash/pull/28)
+
 ## 0.1.6.2
 
 * Fixed bugs; now this library's Template Haskell functions are much more

@@ -1,5 +1,5 @@
 name:        githash
-version:     0.1.6.2
+version:     0.1.6.3
 synopsis:    Compile git revision info into Haskell projects
 description: Please see the README and documentation at <https://www.stackage.org/package/githash>
 category:    Development
