@@ -1,5 +1,9 @@
 # ChangeLog for githash
 
+## 0.1.7.0
+
+* Expose giFiles to users.
+
 ## 0.1.6.3
 
 * Specify protocol.file.allow=always for latest git [#28](https://github.com/snoyberg/githash/pull/28)
