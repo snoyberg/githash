@@ -49,6 +49,7 @@ module GitHash
   , giCommitMessage
   , giDescribe
   , giTag
+  , giFiles
     -- * Creators
   , getGitInfo
   , getGitRoot
@@ -128,6 +129,12 @@ giDescribe = _giDescribe
 -- @since 0.1.5.0
 giTag :: GitInfo -> String
 giTag = _giTag
+
+-- | The files used to determine whether recompilation is necessary in splices.
+--
+-- @since 0.1.7.0
+giFiles :: GitInfo -> [FilePath]
+giFiles = _giFiles
 
 -- | Get a list of files from within a @.git@ directory.
 getGitFilesRegular :: FilePath -> IO [FilePath]
